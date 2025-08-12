@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+
 interface Todo {
   id: number;
   text: string;
@@ -11,9 +14,22 @@ interface TodoListProps {
 }
 
 function TodoList({ todos, selectedTodo, setSelectedTodo, deleteTodo }: TodoListProps) {
+    const [searchItem, setSearcItem] = useState<string>('');
+ const filteredTodos = todos.filter(todo =>
+    todo.text.toLowerCase().includes(searchItem.toLowerCase())
+  );
   return (
-    <ul>
-      {todos.map((todo) => {
+    <>
+    {/* search todos */}
+
+    <input 
+    placeholder="Search todos..."
+    type="text"
+    value={searchItem}
+    onChange={(e) => setSearcItem(e.target.value)}
+    />
+        <ul>
+      {filteredTodos.map((todo) => {
         const isSelected = selectedTodo === todo.id;
         return (
           <li
@@ -40,6 +56,8 @@ function TodoList({ todos, selectedTodo, setSelectedTodo, deleteTodo }: TodoList
         );
       })}
     </ul>
+    </>
+
   );
 }
 

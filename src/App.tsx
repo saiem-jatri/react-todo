@@ -1,41 +1,46 @@
 import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import TodoList from './components/Todolist';
+import About from './components/About';
+import AppNav from './components/AppNav';
 
 interface Todo {
   id: number;
   text: string;
 }
 
-export default function App() {
+function Home() {
   const [selectedTodo, setSelectedTodo] = React.useState<number | null>(1);
   const [newTodo, setNewTodo] = React.useState<string>('');
-    const [todos, setTodos] = React.useState<Todo[]>([
+  const [todos, setTodos] = React.useState<Todo[]>([
     { id: 1, text: 'Learn React' },
     { id: 2, text: 'Build a Todo App' },
     { id: 3, text: 'Master TypeScript' },
   ]);
 
+  const isExistingTodo = (text: string) => {
+    return todos.some(todo => todo.text.toLowerCase() === text.toLowerCase());
+  }
+
   const handleAddTodo = (e: React.FormEvent) => {
-    console.log("====",newTodo);
-    
     e.preventDefault();
-    if(!newTodo.trim()) return; // Prevent adding empty todos
-    setTodos((prev)=> [
+
+    if (!newTodo.trim() || isExistingTodo(newTodo)) return;
+
+    setTodos(prev => [
       ...prev,
       { id: prev.length + 1, text: newTodo.trim() }
     ]);
-    setNewTodo(''); // Clear input after adding
+    setNewTodo('');
   }
-  
-
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-screen  gap-4">
+    <div className="flex flex-col items-center justify-center min-h-screen w-screen gap-4">
       <form onSubmit={handleAddTodo} className="block">
         <input
           type="text"
           value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
+          onChange={e => setNewTodo(e.target.value)}
           placeholder="Enter new todo..."
           className="border rounded px-2 py-2 flex-1"
         />
@@ -50,9 +55,22 @@ export default function App() {
       <TodoList
         todos={todos}
         selectedTodo={selectedTodo}
-        setSelectedTodo={(id) => setSelectedTodo(id)}
+        setSelectedTodo={setSelectedTodo}
         deleteTodo={(id) => setTodos(todos.filter(todo => todo.id !== id))}
       />
     </div>
+  );
+}
+
+
+export default function App() {
+  return (
+    <>
+      <AppNav />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
   );
 }
