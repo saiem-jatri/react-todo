@@ -1,8 +1,12 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import TodoList from './components/Todolist';
 import About from './components/About';
 import AppNav from './components/AppNav';
+import Rootlayout from './layout/Rootlayout';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './components/Login';
+import { AuthProvider } from './AuthContext';
 
 interface Todo {
   id: number;
@@ -63,14 +67,34 @@ function Home() {
 }
 
 
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Rootlayout />}>
+      <Route path="login" element={<Login />} />
+      <Route
+        index
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="about"
+        element={
+          <ProtectedRoute>
+            <About />
+          </ProtectedRoute>
+        }
+      />
+    </Route>
+  )
+);
+
 export default function App() {
   return (
-    <>
-      <AppNav />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }

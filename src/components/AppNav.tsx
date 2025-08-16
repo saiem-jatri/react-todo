@@ -7,20 +7,24 @@ function AppNav() {
         to="/"
         end
         className={({ isActive }) =>
-          isActive
-            ? "text-red-800 font-bold underline"
-            : ""
+          `px-3 py-1 rounded transition ${
+            isActive
+              ? "text-white bg-blue-200 font-bold"
+              : "text-gray-600 hover:text-blue-200"
+          }`
         }
       >
-        Home 
+        Home
       </NavLink>
 
       <NavLink
         to="/about"
         className={({ isActive }) =>
-          isActive
-            ? "text-blue-800 font-bold underline"
-            : ""
+          `px-3 py-1 rounded transition ${
+            isActive
+              ? "text-white bg-blue-200 font-bold"
+              : "text-gray-600 hover:text-blue-200"
+          }`
         }
       >
         About
